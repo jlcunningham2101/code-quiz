@@ -1,292 +1,288 @@
-var taskIdCounter = 0;
+var mainEl = document.querySelector(".main");
+var h1El = document.createElement("h1");
+var overviewEl = document.querySelector("#overview");
+var challengeQuestionsEl = document.querySelector("#challenge");
+var finalScoreEl = document.querySelector("#finalScore");
+var highScorePageEl = document.querySelector("#highScore");
 
-var formEl = document.querySelector("#task-form");
-var tasksToDoEl = document.querySelector("#tasks-to-do");
-var tasksInProgressEl = document.querySelector("#tasks-in-progress");
-var tasksCompletedEl = document.querySelector("#tasks-completed");
-var pageContentEl = document.querySelector("#page-content");
+var userScoreEl = document.createElement("div");
+var beginBtnEl = document.querySelector("#start");
 
-// create array to hold tasks for saving
-var tasks = [];
+var answerAEl = document.createElement("button");
+var answerBEl = document.createElement("button");
+var answerCEl = document.createElement("button");
+var answerDEl = document.createElement("button");
 
-var taskFormHandler = function (event) {
+var enterScoreFormEl = document.createElement("form");
+var userInputEl = document.createElement("input");
+var submitBtnEl = document.createElement("button");
+var backBtnEl = document.createElement("button");
+var eraseScores = document.createElement("button");
+
+var scoreDetailsEl = document.createElement("div");
+var scoreItemEl = document.createElement("li");
+var scoreSheetEl = document.createElement("ol");
+
+var navScoreLinkEl = document.querySelector(".viewHigh");
+
+var questionNumber = 0;
+var check;
+
+var countdown = 30;
+
+var countdownEl = document.querySelector("#countdown");
+var highScores = [];
+var sortedScores = [];
+
+var challengeQuestions = [
+  {
+    question: "Commonly used data types do not include:",
+    answers: ["Strings", "Boolean", "Alerts", "Numbers"],
+    correct: "Alerts",
+  },
+  {
+    question: "The condition in an if/else statement is enclosed with ____.",
+    answers: ["Quotes", "Curly Brackets", "Parenthesis", "Square Brackets"],
+    correct: "Parenthesis",
+  },
+  {
+    question: "Arrays in JavaScript can be used to store ____.",
+    answers: [
+      "Numbers and Strings",
+      "Other Arrays",
+      "Booleans",
+      "All of the Above",
+    ],
+    correct: "All of the Above",
+  },
+  {
+    question:
+      "String values must be enclosed within ____ when being assigned to variables.",
+    answers: ["Commas", "Curly Brackets", "Quotes", "Parenthesis"],
+    correct: "Quotes",
+  },
+  {
+    question:
+      "A very useful tool used during development and debugging for printing content to the debugger is:",
+    answers: ["JavaScript", "Terminal/Bash", "For Loops", "console.log"],
+    correct: "console.log",
+  },
+];
+
+function scoreFormHandler(event) {
   event.preventDefault();
-  var taskNameInput = document.querySelector("input[name='task-name']").value;
-  var taskTypeInput = document.querySelector("select[name='task-type']").value;
+  var scoreNameInput = document.querySelector("input[name='score']").value;
+  var score = countdown;
 
-  // check if inputs are empty (validate)
-  if (!taskNameInput || !taskTypeInput) {
+  if (!scoreNameInput) {
     alert("You need to fill out the task form!");
     return false;
   }
 
-  // reset form fields for next task to be entered
-  document.querySelector("input[name='task-name']").value = "";
-  document.querySelector("select[name='task-type']").selectedIndex = 0;
+  var userScores = {
+    initials: scoreNameInput,
+    score: countdown,
+  };
 
-  // check if task is new or one being edited by seeing if it has a data-task-id attribute
-  var isEdit = formEl.hasAttribute("data-task-id");
+  createScore(userScores);
+}
 
-  if (isEdit) {
-    var taskId = formEl.getAttribute("data-task-id");
-    completeEditTask(taskNameInput, taskTypeInput, taskId);
-  } else {
-    var taskDataObj = {
-      name: taskNameInput,
-      type: taskTypeInput,
-      status: "to do",
-    };
+function createScore(userScores) {
+  console.log(userScores);
 
-    createTaskEl(taskDataObj);
-  }
-};
+  scoreItemEl.className = "score-item";
 
-var createTaskEl = function (taskDataObj) {
-  var listItemEl = document.createElement("li");
-  listItemEl.className = "task-item";
-  listItemEl.setAttribute("data-task-id", taskIdCounter);
-
-  var taskInfoEl = document.createElement("div");
-  taskInfoEl.className = "task-info";
-  taskInfoEl.innerHTML =
-    "<h3 class='task-name'>" +
-    taskDataObj.name +
-    "</h3><span class='task-type'>" +
-    taskDataObj.type +
+  scoreDetailsEl.className = "score-list";
+  scoreDetailsEl.innerHTML =
+    "<h2 class = 'score-name'>" +
+    userScores.initials +
+    "</h3><span class='user-score'>" +
+    userScores.score +
     "</span>";
-  listItemEl.appendChild(taskInfoEl);
 
-  var taskActionsEl = createTaskActions(taskIdCounter);
-  listItemEl.appendChild(taskActionsEl);
+  highScores.push(userScores);
 
-  switch (taskDataObj.status) {
-    case "to do":
-      taskActionsEl.querySelector(
-        "select[name='status-change']"
-      ).selectedIndex = 0;
-      tasksToDoEl.append(listItemEl);
-      break;
-    case "in progress":
-      taskActionsEl.querySelector(
-        "select[name='status-change']"
-      ).selectedIndex = 1;
-      tasksInProgressEl.append(listItemEl);
-      break;
-    case "completed":
-      taskActionsEl.querySelector(
-        "select[name='status-change']"
-      ).selectedIndex = 2;
-      tasksCompletedEl.append(listItemEl);
-      break;
-    default:
-      console.log("Something went wrong!");
-  }
+  saveScore();
+  loadScores();
+  buildHighScorePage(userScores.score);
+}
 
-  // save task as an object with name, type, status, and id properties then push it into tasks array
-  taskDataObj.id = taskIdCounter;
+function buildChallenge(questionNum) {
+  challengeQuestionsEl.classList.remove("variable");
 
-  tasks.push(taskDataObj);
+  h1El.textContent = challengeQuestions[questionNum].question;
 
-  // save tasks to localStorage
-  saveTasks();
+  answerAEl.textContent = challengeQuestions[questionNum].answers[0];
+  answerBEl.textContent = challengeQuestions[questionNum].answers[1];
+  answerCEl.textContent = challengeQuestions[questionNum].answers[2];
+  answerDEl.textContent = challengeQuestions[questionNum].answers[3];
 
-  // increase task counter for next unique task id
-  taskIdCounter++;
-};
+  var questionContainer = document.createElement("div");
 
-var createTaskActions = function (taskId) {
-  // create container to hold elements
-  var actionContainerEl = document.createElement("div");
-  actionContainerEl.className = "task-actions";
+  questionContainer.appendChild(h1El);
+  questionContainer.appendChild(answerAEl);
+  questionContainer.appendChild(answerBEl);
+  questionContainer.appendChild(answerCEl);
+  questionContainer.appendChild(answerDEl);
 
-  // create edit button
-  var editButtonEl = document.createElement("button");
-  editButtonEl.textContent = "Edit";
-  editButtonEl.className = "btn edit-btn";
-  editButtonEl.setAttribute("data-task-id", taskId);
-  actionContainerEl.appendChild(editButtonEl);
-  // create delete button
-  var deleteButtonEl = document.createElement("button");
-  deleteButtonEl.textContent = "Delete";
-  deleteButtonEl.className = "btn delete-btn";
-  deleteButtonEl.setAttribute("data-task-id", taskId);
-  actionContainerEl.appendChild(deleteButtonEl);
-  // create change status dropdown
-  var statusSelectEl = document.createElement("select");
-  statusSelectEl.setAttribute("name", "status-change");
-  statusSelectEl.setAttribute("data-task-id", taskId);
-  statusSelectEl.className = "select-status";
-  actionContainerEl.appendChild(statusSelectEl);
-  // create status options
-  var statusChoices = ["To Do", "In Progress", "Completed"];
-
-  for (var i = 0; i < statusChoices.length; i++) {
-    // create option element
-    var statusOptionEl = document.createElement("option");
-    statusOptionEl.setAttribute("value", statusChoices[i]);
-    statusOptionEl.textContent = statusChoices[i];
-
-    // append to select
-    statusSelectEl.appendChild(statusOptionEl);
-  }
-
-  return actionContainerEl;
-};
-
-var completeEditTask = function (taskName, taskType, taskId) {
-  // find task list item with taskId value
-  var taskSelected = document.querySelector(
-    ".task-item[data-task-id='" + taskId + "']"
-  );
-
-  // set new values
-  taskSelected.querySelector("h3.task-name").textContent = taskName;
-  taskSelected.querySelector("span.task-type").textContent = taskType;
-
-  // loop through tasks array and task object with new content
-  for (var i = 0; i < tasks.length; i++) {
-    if (tasks[i].id === parseInt(taskId)) {
-      tasks[i].name = taskName;
-      tasks[i].type = taskType;
+  challengeQuestionsEl.appendChild(questionContainer);
+  if (questionNum != 0) {
+    footerEl.textContent = check;
+    if (questionNum > 5) {
+      buildScoreFormPage();
     }
   }
+}
 
-  alert("Task Updated!");
+function buildScoreFormPage() {
+  challengeQuestionsEl.classList.add("variable");
+  scoreSubmitEl.classList.remove("variable");
+  h1El.textContent = "All Done!";
 
-  // remove data attribute from form
-  formEl.removeAttribute("data-task-id");
-  // update formEl button to go back to saying "Add Task" instead of "Edit Task"
-  formEl.querySelector("#save-task").textContent = "Add Task";
-  // save tasks to localStorage
-  saveTasks();
-};
+  yourScoreEl.textContent = `Your final score is: ${countdown}`;
+  scoreSubmitEl.appendChild(h1El);
+  scoreSubmitEl.appendChild(yourScoreEl);
 
-var taskButtonHandler = function (event) {
-  // get target element from event
-  var targetEl = event.target;
+  enterScoreFormEl.textContent = "Enter Your Initials:";
 
-  if (targetEl.matches(".edit-btn")) {
-    console.log("edit", targetEl);
-    var taskId = targetEl.getAttribute("data-task-id");
-    editTask(taskId);
-  } else if (targetEl.matches(".delete-btn")) {
-    console.log("delete", targetEl);
-    var taskId = targetEl.getAttribute("data-task-id");
-    deleteTask(taskId);
-  }
-};
+  userInputEl.setAttribute("type", "text");
+  userInputEl.setAttribute("name", "score");
+  userInputEl.setAttribute("id", "score");
+  userInputEl.setAttribute("placeholder", "Your Initials");
 
-var taskStatusChangeHandler = function (event) {
-  console.log(event.target.value);
+  submitBtnEl.setAttribute("type", "button");
+  submitBtnEl.textContent = "Submit";
 
-  // find task list item based on event.target's data-task-id attribute
-  var taskId = event.target.getAttribute("data-task-id");
+  enterScoreFormEl.appendChild(inputFieldEl);
+  enterScoreFormEl.appendChild(submitBtnEl);
 
-  var taskSelected = document.querySelector(
-    ".task-item[data-task-id='" + taskId + "']"
-  );
+  scoreSubmitEl.appendChild(enterScoreFormEl);
+}
 
-  // convert value to lower case
-  var statusValue = event.target.value.toLowerCase();
+function buildHighScorePage() {
+  var scores = loadScores();
+  console.log(scores, scores.score);
 
-  if (statusValue === "to do") {
-    tasksToDoEl.appendChild(taskSelected);
-  } else if (statusValue === "in progress") {
-    tasksInProgressEl.appendChild(taskSelected);
-  } else if (statusValue === "completed") {
-    tasksCompletedEl.appendChild(taskSelected);
+  scoreSubmitEl.classList.add("variable");
+  highScorePageEl.classList.remove("variable");
+  h1El.textContent = "High Score";
+
+  for (var i = 0; i < scores.length; i++) {
+    if ((i = 0)) sortedScores.append(scores.score);
+
+    console.log(sortedScores);
   }
 
-  // update task's in tasks array
-  for (var i = 0; i < tasks.length; i++) {
-    if (tasks[i].id === parseInt(taskId)) {
-      tasks[i].status = statusValue;
+  scoreSheetEl.appendChild(scoreItemEl);
+
+  backBtnEl.textContent = "Go back";
+  eraseScores.textContent = "Reset High Scores";
+  highScorePageEl.appendChild(h1El);
+  highScorePageEl.appendChild(scoreSheetEl);
+  highScorePageEl.appendChild(backBtnEl);
+  highScorePageEl.appendChild(eraseScores);
+}
+
+function compareScores(a, b) {
+  if (b > a) {
+    var temp = highScores[i];
+    highScores[i] = highScores[i + 1];
+    highScores[i + 1] = temp;
+  }
+}
+
+function setTimer() {
+  timeInterval = setInterval(function () {
+    if (countdown > 0) {
+      countdownEl.textContent = countdown;
+      countdown--;
+    } else {
+      countdownEl.textContent = 0;
+      clearInterval(timeInterval);
+      if (questionNumber < 5) buildScoreFormPage();
     }
+  }, 1000);
+}
+
+function startGame() {
+  overviewEl.classList.add("variable");
+  setTimer();
+  buildChallenge(questionNumber);
+}
+
+function checkAnswer(choice) {
+  if (choice == challengeQuestions[questionNumber].correct) {
+    check = true;
+    countdown += 10;
+  } else {
+    check = false;
+    countdown -= 10;
   }
-
-  // save to localStorage
-  saveTasks();
-};
-
-var editTask = function (taskId) {
-  console.log(taskId);
-
-  // get task list item element
-  var taskSelected = document.querySelector(
-    ".task-item[data-task-id='" + taskId + "']"
-  );
-
-  // get content from task name and type
-  var taskName = taskSelected.querySelector("h3.task-name").textContent;
-  console.log(taskName);
-
-  var taskType = taskSelected.querySelector("span.task-type").textContent;
-  console.log(taskType);
-
-  // write values of taskName and taskType to form to be edited
-  document.querySelector("input[name='task-name']").value = taskName;
-  document.querySelector("select[name='task-type']").value = taskType;
-
-  // set data attribute to the form with a value of the task's id so it knows which one is being edited
-  formEl.setAttribute("data-task-id", taskId);
-  // update form's button to reflect editing a task rather than creating a new one
-  formEl.querySelector("#save-task").textContent = "Save Task";
-};
-
-var deleteTask = function (taskId) {
-  console.log(taskId);
-  // find task list element with taskId value and remove it
-  var taskSelected = document.querySelector(
-    ".task-item[data-task-id='" + taskId + "']"
-  );
-  taskSelected.remove();
-
-  // create new array to hold updated list of tasks
-  var updatedTaskArr = [];
-
-  // loop through current tasks
-  for (var i = 0; i < tasks.length; i++) {
-    // if tasks[i].id doesn't match the value of taskId, let's keep that task and push it into the new array
-    if (tasks[i].id !== parseInt(taskId)) {
-      updatedTaskArr.push(tasks[i]);
-    }
+  questionNumber += 1;
+  if (questionNumber < challengeQuestions.length) {
+    buildChallenge(questionNumber);
+  } else {
+    buildScoreFormPage();
   }
+}
 
-  // reassign tasks array to be the same as updatedTaskArr
-  tasks = updatedTaskArr;
-  saveTasks();
-};
+function saveScore() {
+  localStorage.setItem("highScores", JSON.stringify(highScores));
+}
 
-var saveTasks = function () {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-};
+function loadScores() {
+  var highScores = localStorage.getItem("highScores");
+  console.log(highScores);
 
-var loadTasks = function () {
-  var savedTasks = localStorage.getItem("tasks");
-  // if there are no tasks, set tasks to an empty array and return out of the function
-  if (!savedTasks) {
+  if (!highScores) {
     return false;
   }
-  console.log("Saved tasks found!");
-  // else, load up saved tasks
 
-  // parse into array of objects
-  savedTasks = JSON.parse(savedTasks);
-
-  // loop through savedTasks array
-  for (var i = 0; i < savedTasks.length; i++) {
-    // pass each task object into the `createTaskEl()` function
-    createTaskEl(savedTasks[i]);
+  for (var i = 0; i < highScores.length; i++) {
+    if (sortedScores.length == 0) sortedScores.append(highScores[i].score);
   }
-};
 
-// Create a new task
-formEl.addEventListener("submit", taskFormHandler);
+  highScores = JSON.parse(highScores);
+  console.log(highScores);
+  return highScores;
+}
 
-// for edit and delete buttons
-pageContentEl.addEventListener("click", taskButtonHandler);
+function variable(item) {
+  item.setAttribute("class", "variable");
+}
 
-// for changing the status
-pageContentEl.addEventListener("change", taskStatusChangeHandler);
+challengeQuestionsEl.addEventListener("click", function (event) {
+  var element = event.target;
+  var choice;
+  if (element.matches("button")) {
+    choice = element.textContent;
+  }
+  checkAnswer(choice);
+  console.log(element);
+});
 
-loadTasks();
+// Event Listeners
+submitBtnEl.addEventListener("click", scoreFormHandler);
+
+beginBtnEl.addEventListener("click", startGame);
+
+backBtnEl.addEventListener("click", function () {
+  countdown = 30;
+  questionNumber = 0;
+  highScorePageEl.classList.add("variable");
+  overviewEl.classList.remove("variable");
+});
+
+eraseScores.addEventListener("click", function () {
+  highScores = [];
+  saveScore();
+  scoreSheetEl.innerHTML = "";
+});
+
+// Not working
+navScoreLinkEl.addEventListener("click", function () {
+  overviewEl.classList.add("variable");
+  scoreSubmitEl.classList.add("variable");
+  challengeQuestionsEl.classList.add("variable");
+  buildHighScorePage();
+});
