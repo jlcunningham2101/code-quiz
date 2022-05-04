@@ -28,17 +28,22 @@ var navScoreLinkEl = document.querySelector(".viewHigh");
 var questionNumber = 0;
 var check;
 
-var countdown = 30;
+var timer = 30;
 
-var countdownEl = document.querySelector("#countdown");
+var timerEl = document.querySelector("#time");
 var highScores = [];
 var sortedScores = [];
 
 var challengeQuestions = [
   {
-    question: "Commonly used data types do not include:",
-    answers: ["Strings", "Boolean", "Alerts", "Numbers"],
-    correct: "Alerts",
+    question: "Which type of JavaScript language is ___",
+    answers: [
+      "Object-Oriented",
+      "Object-Based",
+      "Assembly-language",
+      "High-level",
+    ],
+    correct: "Object-Based",
   },
   {
     question: "The condition in an if/else statement is enclosed with ____.",
@@ -46,33 +51,38 @@ var challengeQuestions = [
     correct: "Parenthesis",
   },
   {
-    question: "Arrays in JavaScript can be used to store ____.",
+    question:
+      "Which one of the following also known as Conditional Expression:",
     answers: [
-      "Numbers and Strings",
-      "Other Arrays",
-      "Booleans",
-      "All of the Above",
+      "Alternative to if-else",
+      "Switch statement",
+      "If-then-else statement",
+      "immediate if",
     ],
-    correct: "All of the Above",
+    correct: "immediate if",
   },
   {
-    question:
-      "String values must be enclosed within ____ when being assigned to variables.",
-    answers: ["Commas", "Curly Brackets", "Quotes", "Parenthesis"],
-    correct: "Quotes",
+    question: "In JavaScript, what is a block of statement?",
+    answers: [
+      "Conditional block",
+      "block that combines a number of statements into a single compound statement",
+      "both conditional block and a single statement",
+      "block that contains a single statement",
+    ],
+    correct:
+      "block that combines a number of statements into a single compound statement",
   },
   {
-    question:
-      "A very useful tool used during development and debugging for printing content to the debugger is:",
-    answers: ["JavaScript", "Terminal/Bash", "For Loops", "console.log"],
-    correct: "console.log",
+    question: "The 'function; and 'var' are known as:",
+    answers: ["Keywords", "Data types", "Declaration statements", "Prototypes"],
+    correct: "Declaration statements",
   },
 ];
 
 function scoreFormHandler(event) {
   event.preventDefault();
   var scoreNameInput = document.querySelector("input[name='score']").value;
-  var score = countdown;
+  var score = timer;
 
   if (!scoreNameInput) {
     alert("You need to fill out the task form!");
@@ -81,7 +91,7 @@ function scoreFormHandler(event) {
 
   var userScores = {
     initials: scoreNameInput,
-    score: countdown,
+    score: timer,
   };
 
   createScore(userScores);
@@ -139,7 +149,7 @@ function buildScoreFormPage() {
   scoreSubmitEl.classList.remove("variable");
   h1El.textContent = "All Done!";
 
-  yourScoreEl.textContent = `Your final score is: ${countdown}`;
+  yourScoreEl.textContent = `Your final score is: ${timer}`;
   scoreSubmitEl.appendChild(h1El);
   scoreSubmitEl.appendChild(yourScoreEl);
 
@@ -193,11 +203,11 @@ function compareScores(a, b) {
 
 function setTimer() {
   timeInterval = setInterval(function () {
-    if (countdown > 0) {
-      countdownEl.textContent = countdown;
-      countdown--;
+    if (timer > 0) {
+      timerEl.textContent = timer;
+      timer--;
     } else {
-      countdownEl.textContent = 0;
+      timerEl.textContent = 0;
       clearInterval(timeInterval);
       if (questionNumber < 5) buildScoreFormPage();
     }
@@ -213,10 +223,10 @@ function startGame() {
 function checkAnswer(choice) {
   if (choice == challengeQuestions[questionNumber].correct) {
     check = true;
-    countdown += 10;
+    timer += 10;
   } else {
     check = false;
-    countdown -= 10;
+    timer -= 10;
   }
   questionNumber += 1;
   if (questionNumber < challengeQuestions.length) {
@@ -267,7 +277,7 @@ submitBtnEl.addEventListener("click", scoreFormHandler);
 beginBtnEl.addEventListener("click", startGame);
 
 backBtnEl.addEventListener("click", function () {
-  countdown = 30;
+  timer = 30;
   questionNumber = 0;
   highScorePageEl.classList.add("variable");
   overviewEl.classList.remove("variable");
