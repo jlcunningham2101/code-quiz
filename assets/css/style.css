@@ -46,7 +46,7 @@ p {
 }
 
 #begin {
-  align-self: center;
+  align-items: center;
   background-color: var(--dark-purple);
   color: white;
   border-radius: 0.5em;
