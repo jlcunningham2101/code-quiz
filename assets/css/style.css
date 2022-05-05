@@ -11,7 +11,7 @@ nav {
   display: flex;
 }
 
-.viewHigh{
+.view_scores {
   font-size: 0.75em;
   flex: 1;
   color: var(--purple);
@@ -19,7 +19,7 @@ nav {
   justify-content: flex-start;
 }
 
-.scores {
+.time {
   flex: 1;
   font-size: 0.75em;
   display: flex;
@@ -45,7 +45,7 @@ p {
   text-align: center;
 }
 
-#start {
+#begin {
   align-self: center;
   background-color: var(--dark-purple);
   color: white;
@@ -54,7 +54,7 @@ p {
   padding: 0.5em 1em 0.5em 1em;
 }
 
-#start:hover {
+#begin:hover {
   background-color: var(--purple);
 }
 
@@ -107,7 +107,10 @@ form button {
   margin-left: 1em;
 }
 
-.variable {
+footer {
+  display: flex;
+}
+.hide {
   display: none;
 }
 .flex {

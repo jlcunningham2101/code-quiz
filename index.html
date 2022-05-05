@@ -5,34 +5,36 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./assets/css/style.css" />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
   <title>Coding Quiz Challenge</title>
 </head>
 
 <body>
   <header>
     <nav>
-      <div class="viewHigh">View high scores</div>
-      <div id="scores"></div>
+      <div class="view_scores">View high scores</div>
+      <div id="time"></div>
     </nav>
   </header>
 
   <main>
-    <div class="container" id="overview">
+    <div class="container" id="instructions">
       <h1>Code Quiz Challenge</h1>
       <p>
         Welcome to the Code Quiz Challenge! Put your Javascript fundamentals knowledge to the test, but be careful! A
         wrong answer will cost you time on the clock.
       </p>
-      <button id="start">Start Quiz</button>
+      <button id="begin">Start Quiz</button>
     </div>
 
-    <div class="variable" id="challenge"></div>
+    <div class="hide" id="quiz"></div>
 
-    <div class="variable" id="finalScore"></div>
+    <div class="hide" id="submitScore"></div>
 
-    <div class="variable" id="highScore"></div>
+    <div class="hide" id="highScore"></div>
   </main>
+
+  <footer></footer>
 
   <script src="./assets/js/script.js"></script>
 </body>

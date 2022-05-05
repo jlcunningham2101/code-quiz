@@ -1,29 +1,30 @@
 var mainEl = document.querySelector(".main");
 var h1El = document.createElement("h1");
-var overviewEl = document.querySelector("#overview");
-var challengeQuestionsEl = document.querySelector("#challenge");
-var finalScoreEl = document.querySelector("#finalScore");
+var startPageEl = document.querySelector("#instructions");
+var questionEl = document.querySelector("#quiz");
+var scoreSubmitEl = document.querySelector("#submitScore");
 var highScorePageEl = document.querySelector("#highScore");
 
-var userScoreEl = document.createElement("div");
-var beginBtnEl = document.querySelector("#start");
+var yourScoreEl = document.createElement("div");
+var beginBtnEl = document.querySelector("#begin");
 
-var answerAEl = document.createElement("button");
-var answerBEl = document.createElement("button");
-var answerCEl = document.createElement("button");
-var answerDEl = document.createElement("button");
+var opt1El = document.createElement("button");
+var opt2El = document.createElement("button");
+var opt3El = document.createElement("button");
+var opt4El = document.createElement("button");
 
+var footerEl = document.querySelector("footer");
 var enterScoreFormEl = document.createElement("form");
-var userInputEl = document.createElement("input");
-var submitBtnEl = document.createElement("button");
-var backBtnEl = document.createElement("button");
-var eraseScores = document.createElement("button");
+var inputFieldEl = document.createElement("input");
+var submitButtonEl = document.createElement("button");
+var goBackButtonEl = document.createElement("button");
+var clearScores = document.createElement("button");
 
-var scoreDetailsEl = document.createElement("div");
+var scoreInfoEl = document.createElement("div");
 var scoreItemEl = document.createElement("li");
 var scoreSheetEl = document.createElement("ol");
 
-var navScoreLinkEl = document.querySelector(".viewHigh");
+var navScoreLinkEl = document.querySelector(".view_scores");
 
 var questionNumber = 0;
 var check;
@@ -34,7 +35,7 @@ var timerEl = document.querySelector("#time");
 var highScores = [];
 var sortedScores = [];
 
-var challengeQuestions = [
+var quizQuestions = [
   {
     question: "Which type of JavaScript language is ___",
     answers: [
@@ -102,8 +103,8 @@ function createScore(userScores) {
 
   scoreItemEl.className = "score-item";
 
-  scoreDetailsEl.className = "score-list";
-  scoreDetailsEl.innerHTML =
+  scoreInfoEl.className = "score-list";
+  scoreInfoEl.innerHTML =
     "<h2 class = 'score-name'>" +
     userScores.initials +
     "</h3><span class='user-score'>" +
@@ -117,25 +118,24 @@ function createScore(userScores) {
   buildHighScorePage(userScores.score);
 }
 
-function buildChallenge(questionNum) {
-  challengeQuestionsEl.classList.remove("variable");
+function buildQuizPage(questionNum) {
+  questionEl.classList.remove("hide");
 
-  h1El.textContent = challengeQuestions[questionNum].question;
+  h1El.textContent = quizQuestions[questionNum].question;
 
-  answerAEl.textContent = challengeQuestions[questionNum].answers[0];
-  answerBEl.textContent = challengeQuestions[questionNum].answers[1];
-  answerCEl.textContent = challengeQuestions[questionNum].answers[2];
-  answerDEl.textContent = challengeQuestions[questionNum].answers[3];
+  opt1El.textContent = quizQuestions[questionNum].answers[0];
+  opt2El.textContent = quizQuestions[questionNum].answers[1];
+  opt3El.textContent = quizQuestions[questionNum].answers[2];
+  opt4El.textContent = quizQuestions[questionNum].answers[3];
 
   var questionContainer = document.createElement("div");
-
   questionContainer.appendChild(h1El);
-  questionContainer.appendChild(answerAEl);
-  questionContainer.appendChild(answerBEl);
-  questionContainer.appendChild(answerCEl);
-  questionContainer.appendChild(answerDEl);
+  questionContainer.appendChild(opt1El);
+  questionContainer.appendChild(opt2El);
+  questionContainer.appendChild(opt3El);
+  questionContainer.appendChild(opt4El);
 
-  challengeQuestionsEl.appendChild(questionContainer);
+  questionEl.appendChild(questionContainer);
   if (questionNum != 0) {
     footerEl.textContent = check;
     if (questionNum > 5) {
@@ -145,26 +145,26 @@ function buildChallenge(questionNum) {
 }
 
 function buildScoreFormPage() {
-  challengeQuestionsEl.classList.add("variable");
-  scoreSubmitEl.classList.remove("variable");
+  questionEl.classList.add("hide");
+  scoreSubmitEl.classList.remove("hide");
   h1El.textContent = "All Done!";
 
   yourScoreEl.textContent = `Your final score is: ${timer}`;
   scoreSubmitEl.appendChild(h1El);
   scoreSubmitEl.appendChild(yourScoreEl);
 
-  enterScoreFormEl.textContent = "Enter Your Initials:";
+  enterScoreFormEl.textContent = "Enter Inits:";
 
-  userInputEl.setAttribute("type", "text");
-  userInputEl.setAttribute("name", "score");
-  userInputEl.setAttribute("id", "score");
-  userInputEl.setAttribute("placeholder", "Your Initials");
+  inputFieldEl.setAttribute("type", "text");
+  inputFieldEl.setAttribute("name", "score");
+  inputFieldEl.setAttribute("id", "score");
+  inputFieldEl.setAttribute("placeholder", "Your Initials");
 
-  submitBtnEl.setAttribute("type", "button");
-  submitBtnEl.textContent = "Submit";
+  submitButtonEl.setAttribute("type", "button");
+  submitButtonEl.textContent = "Submit";
 
   enterScoreFormEl.appendChild(inputFieldEl);
-  enterScoreFormEl.appendChild(submitBtnEl);
+  enterScoreFormEl.appendChild(submitButtonEl);
 
   scoreSubmitEl.appendChild(enterScoreFormEl);
 }
@@ -173,8 +173,9 @@ function buildHighScorePage() {
   var scores = loadScores();
   console.log(scores, scores.score);
 
-  scoreSubmitEl.classList.add("variable");
-  highScorePageEl.classList.remove("variable");
+  scoreSubmitEl.classList.add("hide");
+  footerEl.classList.add("hide");
+  highScorePageEl.classList.remove("hide");
   h1El.textContent = "High Score";
 
   for (var i = 0; i < scores.length; i++) {
@@ -185,12 +186,12 @@ function buildHighScorePage() {
 
   scoreSheetEl.appendChild(scoreItemEl);
 
-  backBtnEl.textContent = "Go back";
-  eraseScores.textContent = "Reset High Scores";
+  goBackButtonEl.textContent = "Go back";
+  clearScores.textContent = "Reset High Scores";
   highScorePageEl.appendChild(h1El);
   highScorePageEl.appendChild(scoreSheetEl);
-  highScorePageEl.appendChild(backBtnEl);
-  highScorePageEl.appendChild(eraseScores);
+  highScorePageEl.appendChild(goBackButtonEl);
+  highScorePageEl.appendChild(clearScores);
 }
 
 function compareScores(a, b) {
@@ -215,13 +216,13 @@ function setTimer() {
 }
 
 function startGame() {
-  overviewEl.classList.add("variable");
+  startPageEl.classList.add("hide");
   setTimer();
-  buildChallenge(questionNumber);
+  buildQuizPage(questionNumber);
 }
 
 function checkAnswer(choice) {
-  if (choice == challengeQuestions[questionNumber].correct) {
+  if (choice == quizQuestions[questionNumber].correct) {
     check = true;
     timer += 10;
   } else {
@@ -229,8 +230,8 @@ function checkAnswer(choice) {
     timer -= 10;
   }
   questionNumber += 1;
-  if (questionNumber < challengeQuestions.length) {
-    buildChallenge(questionNumber);
+  if (questionNumber < quizQuestions.length) {
+    buildQuizPage(questionNumber);
   } else {
     buildScoreFormPage();
   }
@@ -257,11 +258,11 @@ function loadScores() {
   return highScores;
 }
 
-function variable(item) {
-  item.setAttribute("class", "variable");
+function hide(item) {
+  item.setAttribute("class", "hide");
 }
 
-challengeQuestionsEl.addEventListener("click", function (event) {
+questionEl.addEventListener("click", function (event) {
   var element = event.target;
   var choice;
   if (element.matches("button")) {
@@ -271,28 +272,26 @@ challengeQuestionsEl.addEventListener("click", function (event) {
   console.log(element);
 });
 
-// Event Listeners
-submitBtnEl.addEventListener("click", scoreFormHandler);
+submitButtonEl.addEventListener("click", scoreFormHandler);
 
 beginBtnEl.addEventListener("click", startGame);
 
-backBtnEl.addEventListener("click", function () {
+goBackButtonEl.addEventListener("click", function () {
   timer = 30;
   questionNumber = 0;
-  highScorePageEl.classList.add("variable");
-  overviewEl.classList.remove("variable");
+  highScorePageEl.classList.add("hide");
+  startPageEl.classList.remove("hide");
 });
 
-eraseScores.addEventListener("click", function () {
+clearScores.addEventListener("click", function () {
   highScores = [];
   saveScore();
   scoreSheetEl.innerHTML = "";
 });
 
-// Not working
 navScoreLinkEl.addEventListener("click", function () {
-  overviewEl.classList.add("variable");
-  scoreSubmitEl.classList.add("variable");
-  challengeQuestionsEl.classList.add("variable");
+  startPageEl.classList.add("hide");
+  scoreSubmitEl.classList.add("hide");
+  questionEl.classList.add("hide");
   buildHighScorePage();
 });
