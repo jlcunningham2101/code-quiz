@@ -6,7 +6,6 @@
 - [Features](#features)
 - [User-Story](#user-story)
 - [Acceptance-Criteria](#acceptance-criteria)
-- [Usage](#usage)
 - [Webpage-Screenshots](#webpage-screenshots)
 - [Github-Link](#github-link)
 - [Deployed-Link](#deployed-link)
@@ -45,18 +44,26 @@ GIVEN I am taking a code quiz
 - WHEN the game is over
   -- THEN I can save my initials and score
 
-### Usage
-
 ### Webpage-Screenshots
+
+![Screenshot](<assets/images/Screenshot%20(47).png>)
+![Screenshot](<assets/images/Screenshot%20(48).png>)
+![Screenshot](<assets/images/Screenshot%20(49).png>)
+![Screenshot](<assets/images/Screenshot%20(50).png>)
+![Screenshot](<assets/images/Screenshot%20(51).png>)
+![Screenshot](<assets/images/Screenshot%20(52).png>)
 
 ### Github-Link
 
 https://github.com/jlcunningham2101/code-quiz
+https://github.com/jlcunningham2101/code-quiz.git
 
 ### Deployed-Link
+
+https://jlcunningham2101.github.io/code-quiz/
 
 ### Contributor
 
 Name: Jill Cunningham
 Email: jleighcunningham@gmail.com
-Github Profile:
+Github Profile: https://github.com/jlcunningham2101
