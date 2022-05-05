@@ -153,7 +153,7 @@ function buildScoreFormPage() {
   scoreSubmitEl.appendChild(h1El);
   scoreSubmitEl.appendChild(yourScoreEl);
 
-  enterScoreFormEl.textContent = "Enter Inits:";
+  enterScoreFormEl.textContent = "Enter Your Initials:";
 
   inputFieldEl.setAttribute("type", "text");
   inputFieldEl.setAttribute("name", "score");

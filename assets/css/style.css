@@ -117,3 +117,8 @@ footer {
   display: flex;
   flex-wrap: wrap;
 }
+
+footer {
+  background-color: #321d70;
+  color: white;
+}
